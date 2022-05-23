@@ -24,6 +24,7 @@ class UserSelection(Base):
     has_cplusplus = Column(Boolean,default=False)
     has_ai = Column(Boolean,default=False)
     has_django = Column(Boolean,default=False)
+    has_java = Column(Boolean,default=False)
     created_at = Column(DateTime,default=datetime.utcnow,nullable=False)
     user = Column(ForeignKey('Users.id'))
 
@@ -85,5 +86,5 @@ class Django_News(Base):
 
 
 if __name__ == "__main__":
-    engine = create_engine('sqlite:///project_db.db')
+    engine = create_engine('sqlite:///project.sqlite')
     Base.metadata.create_all(engine)

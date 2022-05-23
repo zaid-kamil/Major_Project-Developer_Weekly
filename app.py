@@ -20,7 +20,7 @@ app.secret_key = 'the basics of life with python'
 
 
 def get_db():
-    engine = create_engine('sqlite:///project_db.db')
+    engine = create_engine('sqlite:///project.sqlite')
     Session = scoped_session(sessionmaker(bind=engine))
     return Session()
 
@@ -102,7 +102,7 @@ def home():
         else:
             flash('You have to login first','warning')
             sess.close()
-        checked_python=checked_cpluslus=checked_ai=checked_django=False
+        checked_java=checked_python=checked_cpluslus=checked_ai=checked_django=False
         if request.method=="POST":
             if request.form.get('python','off')=='on':
                 checked_python=True
@@ -112,13 +112,15 @@ def home():
                 checked_ai = True
             if request.form.get('django','off')=='on':
                 checked_django = True
+            if request.form.get('java','off')=='on':
+                checked_java = True
             
 
-            if (checked_python or checked_cpluslus or checked_ai or checked_django)==False:
+            if (checked_java or checked_python or checked_cpluslus or checked_ai or checked_django)==False:
                 flash('You did not selected any of the options','warning')
             else:
                 sess = get_db()
-                news_data = UserSelection(has_python=checked_python,has_cplusplus=checked_cpluslus,has_ai=checked_ai,has_django=checked_django,user=session.get('id'))
+                news_data = UserSelection(has_python=checked_python,has_cplusplus=checked_cpluslus,has_ai=checked_ai,has_django=checked_django,has_java=checked_java,user=session.get('id'))
                 sess.add(news_data)
                 sess.commit()
                 sess.close()
@@ -154,12 +156,15 @@ def change_pref():
             if request.form.get('django','off')=='on':
                 checked_django = True
                 results.has_django=True
+            if request.form.get('java','off')=='on':
+                checked_java = True
+                results.has_java=True
 
-            if (checked_python or checked_cpluslus or checked_ai or checked_django)==False:
+            if (checked_python or checked_cpluslus or checked_ai or checked_django or checked_java)==False:
                 flash('You did not selected any of the options','warning')
             else:
                 print(results)
-                sess.query(UserSelection).update({'has_python':checked_python,'has_cplusplus':checked_cpluslus,'has_ai':checked_ai,'has_django':checked_django})
+                sess.query(UserSelection).update({'has_python':checked_python,'has_cplusplus':checked_cpluslus,'has_ai':checked_ai,'has_django':checked_django,'has_java':checked_java})
                 sess.commit()
                 sess.close()
                 flash('Successfully updated your selections','success')
@@ -193,9 +198,16 @@ def dashboard():
                 aidata = sess.query(AI_News).all()
             if results.has_django:
                 djangodata = sess.query(Django_News).all()
+            if results.has_java:
+                javadata = sess.query(Java_News).all()
             sess.close()
 
-            return render_template('dashboard.html',title='News_Dashboard',python_news = pdata, cpp_news = cppdata ,ai_news=aidata,django_news = djangodata)
+            return render_template('dashboard.html',title='News_Dashboard',
+                    python_news = pdata,
+                    cpp_news = cppdata,
+                    ai_news=aidata,
+                    django_news = djangodata,
+                    java_news=javadata)
         else:
             return redirect('/home')
     else:
@@ -207,7 +219,6 @@ def dashboard():
 def details():
     sess = get_db()
     selection = request.args.get('f')
-    print(selection)
     if selection=='p':
         data = sess.query(PythonNews).all()
     if selection=='c':
@@ -217,6 +228,9 @@ def details():
         data = sess.query(AI_News).all()
     if selection=='d':
         data = sess.query(Django_News).all()
+    if selection=='j':
+        data = sess.query(Java_News).all()
+
     return render_template('detail.html',title='News_Dashboard',selected=selection,details=data)
 
 
@@ -332,4 +346,5 @@ if __name__ == '__main__':
     update_cpp()
     update_ai()
     update_django()
+    update_java()
     app.run(debug=True)
