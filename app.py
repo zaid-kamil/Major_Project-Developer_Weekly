@@ -142,7 +142,7 @@ def change_pref():
             ctx['results'] = results
         else:
             flash('You have to login first','warning')
-        checked_python=checked_cpluslus=checked_ai=checked_django=False
+        checked_java = checked_python=checked_cpluslus=checked_ai=checked_django=False
         if request.method=="POST":
             if request.form.get('python','off')=='on':
                 checked_python=True
@@ -188,7 +188,7 @@ def dashboard():
         results = sess.query(UserSelection).filter(UserSelection.user==session.get('id')).first()
         if results:
             
-            pdata=cppdata=aidata=djangodata=None
+            pdata=cppdata=aidata=djangodata=javadata=None
             print(results.has_python)
             if results.has_python:
                 pdata = sess.query(PythonNews).all()
@@ -294,7 +294,7 @@ def update_cpp():
     # creating dataframe of the extracted details
     df = pd.DataFrame(final_data)
     df['created_at'] = time_format
-    engine = create_engine('sqlite:///project_db.db')
+    engine = create_engine('sqlite:///project.sqlite')
     df.to_sql(Cplusplus_News.__tablename__,engine,if_exists='replace',index=True,index_label='id')
     print("Successfully Saved to database")
 
@@ -314,7 +314,7 @@ def update_ai():
     df = pd.DataFrame(final_data)
 
     df['created_at'] = time_format
-    engine = create_engine('sqlite:///project_db.db')
+    engine = create_engine('sqlite:///project.sqlite')
     df.to_sql(AI_News.__tablename__,engine,if_exists='replace',index=True,index_label='id')
     print("Successfully Saved to database")
 
@@ -326,7 +326,7 @@ def update_django():
     details = extract_details(soup,name_of_classes)
     df = pd.DataFrame(details)
     df['created_at'] = time_format
-    engine = create_engine('sqlite:///project_db.db')
+    engine = create_engine('sqlite:///project.sqlite')
     df.to_sql(Django_News.__tablename__,engine,if_exists='replace',index=True,index_label='id')
     print("Successfully updated django weekly")
 
@@ -337,7 +337,7 @@ def update_java():
     time_format = datetime.datetime.now()
     df = pd.DataFrame(news_list)
     df['created_at'] = time_format
-    engine = create_engine('sqlite:///project_db.db')
+    engine = create_engine('sqlite:///project.sqlite')
     df.to_sql(Java_News.__tablename__,engine,if_exists='replace',index=True,index_label='id')
     print("Successfully updated java weekly")
     
