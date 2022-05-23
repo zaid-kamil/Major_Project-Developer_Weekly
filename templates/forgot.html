@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<style>
+        /* .card-header{
+        background-color: #1D1B1B;
+    }
+        .card-title{
+        text-align: center;
+        color: #EC4D37;
+    }
+    .form-group{
+        font-size: 20px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    } */
+
+</style>
+{% endblock %}
+{% block body %}
+<div class="container vh-100">
+    <div class="row p-5">
+        <div class="col-sm-12 col-md-8 mx-auto">
+            <div class="card shadow shadow-lg m-4 vh-70">
+                <div class="card-header">
+                <div class="card-title"><h2>Reset Password</h2>
+                    <form method="POST" class="p-3">
+                        <div class="form-group">
+                            <label for="">Email</label>
+                            <input type="text" name="email" id="email" class="form-control" placeholder="Enter your email id" aria-describedby="helpId">
+                            <button class="btn btn-outline-success btn-block mt-3" name="pwd">Send mail</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<style>
+    body{
+         background-image: url('/static/images/signup-img.svg');
+         background-repeat: no-repeat;
+
+         background-position: right 93px;
+         background-size: auto;
+         background-color: rgb(255, 255, 255);
+    }
+
+    .form-group{
+        font-size: 20px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+    input[type='text']{
+        margin: 0px 0px 30px;
+    }
+    input[type='password']{
+        margin: 0px 0px 30px;
+    }
+    .card-title{
+        text-align: center;
+        color: #EC4D37;
+        font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+    .card-header{
+        background-color: #1D1B1B;
+    }
+    .btn{
+        margin-top: 25px;
+        font-size: larger;
+        font-weight: bolder;
+    }
+    .btn-block:hover{
+        background-color: green
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container vh-100">
+    
+    <div class="row p-5">
+        <div class="col-sm-12 col-md-8 mx-auto">
+            <div class="card shadow-lg m-4">
+                <div class="card-header">
+                    <div class="card-title"><h2>Register your account</h2></div>
+                </div>
+                <form method="POST" class="p-3">
+                    
+                    <div class="form-group">
+                        <label for="">Name</label>
+                        <input type="text"
+                        
+                        class="form-control" name="name" id="name" aria-describedby="helpId" placeholder="Enter your name" required>
+                        
+                        
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="">Email</label>
+                        <input type="email"
+                        class="form-control" name="email" id="email" aria-describedby="helpId" placeholder="Enter your email" required>
+                       
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="">Password</label>
+                        <input type="password"
+                        class="form-control" name="password" id="password" aria-describedby="helpId" placeholder="Enter your email" required>
+                        
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="">Confirm Password</label>
+                        <input type="password"
+                        class="form-control" name="cpassword" id="cpassword" aria-describedby="helpId" placeholder="Confirm your password" required>
+                        
+                    </div>
+                    <button class="btn btn-outline-success btn-block">Submit</button>
+                    {% include "notification.html" %}
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<style>
+        body{
+         background-image: url('/static/images/signup-img.svg');
+         background-repeat: no-repeat;
+         background-position: right 93px;
+         background-size: auto;
+         background-color: rgb(255, 255, 255);
+    }
+    .card-title{
+        /* font-weight: bolder; */
+        font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        text-align: center;
+        color: #EC4D37;
+    }
+
+    .card-header{
+        background-color: #1D1B1B;
+    }
+    .forgot{
+        color: darkgreen;
+        text-decoration: none;
+        margin-bottom: 12px;
+        /* border: 2px solid red; */
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .form-group{
+        font-size: 20px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+    input[type='text']{
+        margin: 0px 0px 30px;
+    }
+    input[type='password']{
+        margin: 0px 0px 30px;
+    }
+    .btn{
+        margin-top: 25px;
+        font-size: larger;
+        font-weight: bolder;
+    }
+</style>
+{% endblock %}
+
+
+{% block body %}
+<div class="container vh-100">
+    <div class="row p-5">
+        <div class="col-sm-12 col-md-8 mx-auto">
+            <div class="card shadow shadow-lg m-4 vh-70">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h2>User Login</h2>
+                    </div>
+                </div>
+                <form method="POST" class="p-3">
+                    <div class="form-group">
+                        <label for="">Email</label>
+                        <input type="text" name="email" id="email" class="form-control" placeholder="Enter your email id" aria-describedby="helpId">
+                        
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Password</label>
+                        <input type="password"
+                        class="form-control" name="password" id="password" aria-describedby="passhelpId" placeholder="Enter your password">
+                        
+                    </div>
+                    <a class="forgot" href="/forgot">Forgot Password</a>
+                    <button class="btn btn-outline-success btn-block" name="pwd">Submit</button>
+                    {% include "notification.html" %}
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}{% endblock %}

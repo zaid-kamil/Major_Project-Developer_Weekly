@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block css %}
+<style>
+    .card-category{
+        font-weight: bold;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        text-shadow: 1px 1px #EC4D37;
+    }
+    
+    #py_img{
+        width: 5%;
+    }
+    #cpp_img{
+        width: 2%;
+        margin-right: 1%
+    }
+    #ai_img{
+        width: 3%;
+        margin-right: 8px;
+    }
+    #django_img{
+        width: 4%;
+        margin-right: 1%  
+    }
+    #link_img{
+        width: 7%;
+        margin-left: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+{% if selected=='p' %}
+<div class="container-fluid py-3">
+    <div class="row">
+        <div class="col">
+            {% for news in details %}
+            <div class="card my-3">
+                <div class="card-body">
+                    <img src="../static/images/wordpress-gab50779e4_640.png" alt="..." class="img-fluid" id="py_img">    
+                    <h4 class="card-title d-inline">{{ news.topic }}</h4>
+                    <p class="card-text">{{news.description}}</p>
+                    <a target="blank" class="card-link" >Date: {{news.created_at.date()}}</a>   
+                </div>
+                <div class="card-footer d-flex">
+                    <a target="blank" href="{{news.link}}" class="card-link" >Read Source</a>    
+                    <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
+                </div>         
+            </div>         
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="container-fluid py-3">
+    <div class="row">
+        <div class="col">
+            {% for news in details %}
+            <div class="card my-3">
+                <div class="card-body">
+                    {% if selected=='p' %}
+                    <img src="../static/images/wordpress-gab50779e4_640.png" alt="..." class="img-fluid" id="py_img">
+                    {% endif %}
+                    
+                    {% if selected=='c' %}
+                    <img src="../static/images/1822px-ISO_C++_Logo.svg.png" alt="..." class="img-fluid" id="cpp_img">
+                    {% endif %}
+                    
+                    {% if selected=='a' %}
+                    <img src="../static/images/AI-removebg-preview.png" alt="..." class="img-fluid" id="ai_img">
+                    {% endif %}
+                    {% if selected=='d' %}
+                    <img src="../static/images/django.png" alt="..." class="img-fluid" id="django_img">
+                    {% endif %}
+                    
+                    
+                    <h4 class="card-title d-inline">{{ news.topic }}</h4>
+                    <div class="card-category"><h4>Category: {{news.category}}</h4></div>
+                    <p class="card-text">{{news.description}}</p>
+                    <a target="blank" class="card-link" >Date: {{news.created_at.date()}}</a>   
+                </div>
+                <div class="card-footer d-flex">
+                    <a target="blank" href="{{news.link}}" class="card-link" >Read Source</a>  
+                    <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span> 
+                </div>         
+            </div>         
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

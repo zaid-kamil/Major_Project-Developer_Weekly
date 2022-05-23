@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<style>
+  body{
+    background-image: url('/static/images/undraw_newspaper_k-72-w.svg');
+    background-repeat: no-repeat;
+    background-position: right 93px;
+  }
+  .card-header{
+    background-color: antiquewhite;
+  }
+  label {
+    display: block;
+  }
+  .card-title{
+    text-align: center;
+  }
+  .form-check-label{
+    margin: 10px;
+  }
+  .row{
+    padding-top: 3rem;
+    margin-left: 210px;
+  }
+  .form_box{
+    height: 225px;
+
+  }
+</style>
+{% endblock %}
+<style>
+  
+</style>
+{% block body %}
+<div class="container vh-100">
+  <div class="row">
+    <div class="col sm-12 col-md-8">
+      <div class="card shadow-lg m-4">
+        <div class="card-header">
+          <div class="card-title">
+            <h2>Choose your technology</h2>
+          </div>
+        </div>
+        <!-- <div class="content">
+          <p>You can choose one or more technology to read latest news regarding to it.</p>
+        </div> -->
+        <div class="form_box">
+          <form method="POST">
+            <div class="form-check p-3">
+              <label class="form-check-label">
+                  
+                <input type="checkbox" class="form-check-input" name="python" id="python"  un-checked>
+                Python
+              </label>
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" name="cplusplus" id="cplusplus"  un-checked>
+                C Plus Plus
+              </label>
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" name="ai" id="ai" un-checked>
+                Artificial Intelligence
+              </label>
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" name="django" id="django" un-checked>
+                Django
+              </label>
+            </div>
+            <button class="btn btn-outline-info btn-block">Continue</button>
+            {% include "notification.html" %}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+{% endblock %}
+{% block js %}{% endblock %}

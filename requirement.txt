@@ -1,0 +1,6 @@
+requests
+pandas
+BeautifulSoup4
+datetime
+flask
+sqlalchemy
