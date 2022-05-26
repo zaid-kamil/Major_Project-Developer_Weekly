@@ -340,11 +340,24 @@ def update_java():
     engine = create_engine('sqlite:///project.sqlite')
     df.to_sql(Java_News.__tablename__,engine,if_exists='replace',index=True,index_label='id')
     print("Successfully updated java weekly")
-    
+
+def update_python():
+    url = 'https://python.thisweekin.io/'
+    soup = get_soup(url)
+    time_format = datetime.datetime.now()
+    name_of_classes = preprocessing_data(soup)
+    details = extract_details(soup,name_of_classes)
+    df = pd.DataFrame(details)
+    df['created_at'] = time_format
+    engine = create_engine('sqlite:///project.sqlite')
+    df.to_sql(PythonNews.__tablename__,engine,if_exists='replace',index=True,index_label='id')
+    print("Successfully updated python weekly")
+
 
 if __name__ == '__main__':
     update_cpp()
     update_ai()
     update_django()
     update_java()
+    update_python()
     app.run(debug=True)
