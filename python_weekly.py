@@ -7,11 +7,6 @@ from sqlalchemy.orm import scoped_session
 from sqlalchemy import create_engine
 from project_orm import PythonNews
 
-def get_db():
-    engine = create_engine('sqlite:///project_db.db')
-    Session = scoped_session(sessionmaker(bind=engine))
-    return Session()
-
 def get_soup(url):
     try:
         page = requests.get(url)
@@ -25,51 +20,61 @@ def get_soup(url):
         print("Internet error")
         return None
 
-# function return dictionary of Heading and links
-def extract_pyweekly_detail(bsoup):
-    link_lst = []
-    heading_lst = []
-    paralst = []
-    td = soup.find('td',class_='defaultText')
-    anchor = td.find_all('a')[1:]
-
-    # extract links
-    for a in anchor:
-        link_lst.append(a.get('href'))
+# extracting category of the article
+def article_category(soup,class_name):
+    article = soup.find('section',class_=class_name)
+    category = article.find('h2').find('span')
+    return category.string
     
-    # extract heading
-    for heading in anchor:
-        heading_lst.append(heading.string)
+# finding names of the class present in section
+def preprocessing_data(soup):
+    cls_name = []
+    remove_item = ['cc-news','cc-trendsandinsights','cc-events','cc-sponsored-link-bottom','cc-sponsored-link-top','cc-sponsorship']
+    issue = soup.find('div',class_='issue__body')
+    body = issue.find_all('section')
+    for item in body:
+        if item.has_attr('class'):
+            cls_name.append(item['class'])
 
-    # extract paragraph
-    for item in td.find_all('div'):
-        if(item.find('span')):
+    for item1 in remove_item:
+        for item in cls_name:
+            if item1==item[1]:
+                cls_name.remove(item)
+    return cls_name
+
+def extract_details(soup,class_name):
+    category =[]
+    topic = []
+    description = []
+    link = []
+    for name in class_name:
+        try:
+            section = soup.find('section',class_=name[1])
+            div_in_sec = section.find_all('div',class_='item item--issue item--link')
+            for item in div_in_sec:
+                category.append(article_category(soup,name[1]))
+                content = item.find('h3',class_='item__title')
+                topic.append(content.find('a').string)
+                description.append(item.find('p').string)
+                link.append(content.find('a').get('href'))
+        except Exception as e:
+            print(e)
             continue
-        else:
-            paralst.append(item.text)
-    new_list = []
-    for item in range(len(paralst)):
-        new_list.append(paralst[item].strip())
-    for item in new_list:
-        if item=='':
-            new_list.remove(item)
-            
     return{
-        'topic':heading_lst,
-        'description':new_list,
-        'link':link_lst
+        'category':category,
+        'topic':topic,
+        'description':description,
+        'link':link
     }
 
 if __name__ == '__main__':
-    url = "https://www.pythonweekly.com/archive/23.html"
+    url = 'https://python.thisweekin.io/'
     soup = get_soup(url)
-    data = []
-    page_details = extract_pyweekly_detail(soup)
     time_format = datetime.datetime.now()
-    df = pd.DataFrame(page_details)
+    name_of_classes = preprocessing_data(soup)
+    details = extract_details(soup,name_of_classes)
+    df = pd.DataFrame(details)
     df['created_at'] = time_format
-    # sess = get_db()
     engine = create_engine('sqlite:///project_db.db')
     df.to_sql(PythonNews.__tablename__,engine,if_exists='append',index=None)
     print("Successfully Saved to database")
-    

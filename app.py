@@ -351,7 +351,7 @@ def update_python():
     df['created_at'] = time_format
     engine = create_engine('sqlite:///project.sqlite')
     df.to_sql(PythonNews.__tablename__,engine,if_exists='replace',index=True,index_label='id')
-    print("Successfully updated python weekly")
+    print("Successfully updated  weekly")
 
 
 if __name__ == '__main__':
