@@ -20,61 +20,31 @@ def get_soup(url):
         print("Internet error")
         return None
 
-# extracting category of the article
-def article_category(soup,class_name):
-    article = soup.find('section',class_=class_name)
-    category = article.find('h2').find('span')
-    return category.string
-    
-# finding names of the class present in section
-def preprocessing_data(soup):
-    cls_name = []
-    remove_item = ['cc-news','cc-trendsandinsights','cc-events','cc-sponsored-link-bottom','cc-sponsored-link-top','cc-sponsorship']
-    issue = soup.find('div',class_='issue__body')
-    body = issue.find_all('section')
-    for item in body:
-        if item.has_attr('class'):
-            cls_name.append(item['class'])
-
-    for item1 in remove_item:
-        for item in cls_name:
-            if item1==item[1]:
-                cls_name.remove(item)
-    return cls_name
-
-def extract_details(soup,class_name):
-    category =[]
-    topic = []
-    description = []
-    link = []
-    for name in class_name:
-        try:
-            section = soup.find('section',class_=name[1])
-            div_in_sec = section.find_all('div',class_='item item--issue item--link')
-            for item in div_in_sec:
-                category.append(article_category(soup,name[1]))
-                content = item.find('h3',class_='item__title')
-                topic.append(content.find('a').string)
-                description.append(item.find('p').string)
-                link.append(content.find('a').get('href'))
-        except Exception as e:
-            print(e)
-            continue
-    return{
-        'category':category,
-        'topic':topic,
-        'description':description,
-        'link':link
-    }
+def py_extract_details(soup):
+    data = []
+    target = soup.find_all('ul',class_='newsletter-stories')
+    for ultag in target:
+        for item in ultag.find_all('li'):
+            try:
+                linktag = item.find('a',attrs={'class':'title'})
+                title = linktag.text
+                link = linktag.get('href')
+                source = item.find('div',class_='host').text
+                data.append({
+                    'topic':title,
+                    'link':link,
+                    'source':source,
+                })   
+            except:
+                pass
+    return data
 
 if __name__ == '__main__':
-    url = 'https://python.thisweekin.io/'
+    url ='https://python.libhunt.com/newsletter/312'
     soup = get_soup(url)
     time_format = datetime.datetime.now()
-    name_of_classes = preprocessing_data(soup)
-    details = extract_details(soup,name_of_classes)
+    details = py_extract_details(soup)
     df = pd.DataFrame(details)
     df['created_at'] = time_format
-    engine = create_engine('sqlite:///project_db.db')
-    df.to_sql(PythonNews.__tablename__,engine,if_exists='append',index=None)
-    print("Successfully Saved to database")
+    engine = create_engine('sqlite:///project.sqlite')
+    df.to_sql(PythonNews.__tablename__,engine,if_exists='replace',index=None)

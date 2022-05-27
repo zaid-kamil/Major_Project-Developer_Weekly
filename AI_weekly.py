@@ -103,7 +103,7 @@ if __name__ == '__main__':
     df = pd.DataFrame(final_data)
 
     df['created_at'] = time_format
-    engine = create_engine('sqlite:///project_db.db')
+    engine = create_engine('sqlite:///project.sqlite')
     df.to_sql(AI_News.__tablename__,engine,if_exists='replace',index=None)
     print("Successfully Saved to database")
 

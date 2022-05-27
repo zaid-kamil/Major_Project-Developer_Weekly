@@ -76,5 +76,5 @@ if __name__ == '__main__':
     df = pd.DataFrame(details)
     df['created_at'] = time_format
     engine = create_engine('sqlite:///project_db.db')
-    df.to_sql(Django_News.__tablename__,engine,if_exists='append',index=None)
+    df.to_sql(Django_News.__tablename__,engine,if_exists='replace',index=None)
     print("Successfully Saved to database")

@@ -25,6 +25,7 @@ class UserSelection(Base):
     has_ai = Column(Boolean,default=False)
     has_django = Column(Boolean,default=False)
     has_java = Column(Boolean,default=False)
+    has_js = Column(Boolean,default=False)
     created_at = Column(DateTime,default=datetime.utcnow,nullable=False)
     user = Column(ForeignKey('Users.id'))
 
@@ -36,7 +37,7 @@ class PythonNews(Base):
     id = Column(Integer,primary_key=True)
     topic = Column(String(255))
     link = Column(String())
-    description = Column(String())
+    source = Column(String())
     created_at =  Column(DateTime,default=datetime.utcnow,nullable=False)
 
     def __repr__(self) -> str:
@@ -77,6 +78,18 @@ class Django_News(Base):
     topic = Column(String())
     description = Column(String())
     link = Column(String())
+    created_at =  Column(DateTime,default=datetime.utcnow,nullable=False)
+
+    def __repr__(self) -> str:
+        return f'{self.topic}'
+
+class Js_News(Base):
+    __tablename__ = 'js_news'
+    id = Column(Integer,primary_key=True)
+    topic = Column(String())
+    description = Column(String())
+    link = Column(String())
+    source = Column(String(255))
     created_at =  Column(DateTime,default=datetime.utcnow,nullable=False)
 
     def __repr__(self) -> str:

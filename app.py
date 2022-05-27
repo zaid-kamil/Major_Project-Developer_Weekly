@@ -1,6 +1,6 @@
 from smtpd import SMTPServer
 from sqlalchemy import create_engine, engine_from_config, false, true
-from project_orm import Cplusplus_News, Java_News, User,UserSelection,PythonNews,AI_News,Django_News
+from project_orm import Cplusplus_News, Java_News, User,UserSelection,PythonNews,AI_News,Django_News,Js_News
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 from flask.globals import request
@@ -14,6 +14,8 @@ from cpp_newsletter import *
 from AI_weekly import *
 from django import *
 from java_weekly import *
+from python_weekly import *
+from js_weekly import * 
 
 app = Flask(__name__)
 app.secret_key = 'the basics of life with python'
@@ -102,7 +104,7 @@ def home():
         else:
             flash('You have to login first','warning')
             sess.close()
-        checked_java=checked_python=checked_cpluslus=checked_ai=checked_django=False
+        checked_java=checked_python=checked_cpluslus=checked_ai=checked_django=checked_js=False
         if request.method=="POST":
             if request.form.get('python','off')=='on':
                 checked_python=True
@@ -114,13 +116,15 @@ def home():
                 checked_django = True
             if request.form.get('java','off')=='on':
                 checked_java = True
+            if request.form.get('js','off')=='on':
+                checked_js = True
             
 
-            if (checked_java or checked_python or checked_cpluslus or checked_ai or checked_django)==False:
+            if (checked_java or checked_python or checked_cpluslus or checked_ai or checked_django or checked_js)==False:
                 flash('You did not selected any of the options','warning')
             else:
                 sess = get_db()
-                news_data = UserSelection(has_python=checked_python,has_cplusplus=checked_cpluslus,has_ai=checked_ai,has_django=checked_django,has_java=checked_java,user=session.get('id'))
+                news_data = UserSelection(has_python=checked_python,has_cplusplus=checked_cpluslus,has_ai=checked_ai,has_django=checked_django,has_java=checked_java,has_js=checked_js,user=session.get('id'))
                 sess.add(news_data)
                 sess.commit()
                 sess.close()
@@ -141,8 +145,8 @@ def change_pref():
             flash('your saved preferences have been found in database','info')
             ctx['results'] = results
         else:
-            flash('You have to login first','warning')
-        checked_java = checked_python=checked_cpluslus=checked_ai=checked_django=False
+            flash('You have to set your preferences','warning')
+        checked_java = checked_python=checked_cpluslus=checked_ai=checked_js=checked_django=False
         if request.method=="POST":
             if request.form.get('python','off')=='on':
                 checked_python=True
@@ -159,12 +163,15 @@ def change_pref():
             if request.form.get('java','off')=='on':
                 checked_java = True
                 results.has_java=True
+            if request.form.get('js','off')=='on':
+                checked_js = True
+                results.has_js=True
 
-            if (checked_python or checked_cpluslus or checked_ai or checked_django or checked_java)==False:
+            if (checked_python or checked_cpluslus or checked_ai or checked_django or checked_java or checked_js)==False:
                 flash('You did not selected any of the options','warning')
             else:
                 print(results)
-                sess.query(UserSelection).update({'has_python':checked_python,'has_cplusplus':checked_cpluslus,'has_ai':checked_ai,'has_django':checked_django,'has_java':checked_java})
+                sess.query(UserSelection).update({'has_python':checked_python,'has_cplusplus':checked_cpluslus,'has_ai':checked_ai,'has_django':checked_django,'has_java':checked_java,'has_js':checked_js})
                 sess.commit()
                 sess.close()
                 flash('Successfully updated your selections','success')
@@ -188,7 +195,7 @@ def dashboard():
         results = sess.query(UserSelection).filter(UserSelection.user==session.get('id')).first()
         if results:
             
-            pdata=cppdata=aidata=djangodata=javadata=None
+            pdata=cppdata=aidata=djangodata=javadata=jsdata=None
             print(results.has_python)
             if results.has_python:
                 pdata = sess.query(PythonNews).all()
@@ -200,14 +207,17 @@ def dashboard():
                 djangodata = sess.query(Django_News).all()
             if results.has_java:
                 javadata = sess.query(Java_News).all()
+            if results.has_js:
+                jsdata = sess.query(Js_News).all()
             sess.close()
-
+            # print(javadata)
             return render_template('dashboard.html',title='News_Dashboard',
                     python_news = pdata,
                     cpp_news = cppdata,
                     ai_news=aidata,
                     django_news = djangodata,
-                    java_news=javadata)
+                    java_news=javadata,
+                    js_news=jsdata)
         else:
             return redirect('/home')
     else:
@@ -223,16 +233,16 @@ def details():
         data = sess.query(PythonNews).all()
     if selection=='c':
         data = sess.query(Cplusplus_News).all()
-        print(data)
     if selection=='a':
         data = sess.query(AI_News).all()
     if selection=='d':
         data = sess.query(Django_News).all()
     if selection=='j':
         data = sess.query(Java_News).all()
+    if selection=='js':
+        data = sess.query(Js_News).all()
 
     return render_template('detail.html',title='News_Dashboard',selected=selection,details=data)
-
 
 # for logout
 @app.route('/logout')
@@ -322,14 +332,16 @@ def update_django():
     url = 'https://django-news.com/'
     soup = get_soup(url)
     time_format = datetime.datetime.now()
-    name_of_classes = preprocessing_data(soup)
-    details = extract_details(soup,name_of_classes)
-    df = pd.DataFrame(details)
-    df['created_at'] = time_format
-    engine = create_engine('sqlite:///project.sqlite')
-    df.to_sql(Django_News.__tablename__,engine,if_exists='replace',index=True,index_label='id')
-    print("Successfully updated django weekly")
-
+    try:
+        name_of_classes = preprocessing_data(soup)
+        details = extract_details(soup,name_of_classes)
+        df = pd.DataFrame(details)
+        df['created_at'] = time_format
+        engine = create_engine('sqlite:///project.sqlite')
+        df.to_sql(Django_News.__tablename__,engine,if_exists='replace',index=True,index_label='id')
+        print("Successfully Saved to database")
+    except Exception as e:
+        print(e)
 
 def update_java():
     news_soup = get_news_soup()
@@ -342,17 +354,29 @@ def update_java():
     print("Successfully updated java weekly")
 
 def update_python():
-    url = 'https://python.thisweekin.io/'
+    url ='https://python.libhunt.com/newsletter/312'
     soup = get_soup(url)
     time_format = datetime.datetime.now()
-    name_of_classes = preprocessing_data(soup)
-    details = extract_details(soup,name_of_classes)
+    details = py_extract_details(soup)
     df = pd.DataFrame(details)
     df['created_at'] = time_format
     engine = create_engine('sqlite:///project.sqlite')
     df.to_sql(PythonNews.__tablename__,engine,if_exists='replace',index=True,index_label='id')
-    print("Successfully updated  weekly")
+    print("Successfully Saved to database")
 
+
+def update_js():
+    jssoup = get_soup('https://javascriptweekly.com/')
+    atags = jssoup.find('div',attrs={'class':'main'}).find_all('a')
+    issue_path = atags[2].attrs.get('href')
+    soup = get_soup('https://javascriptweekly.com/'+issue_path)
+    data = js_extract_data(soup)
+    time_format = datetime.datetime.now()
+    df = pd.DataFrame(data)
+    df['created_at'] = time_format
+    engine = create_engine('sqlite:///project.sqlite')
+    df.to_sql(Js_News.__tablename__,engine,if_exists='replace',index=True,index_label='id')
+    print("Successfully Saved to database")
 
 if __name__ == '__main__':
     update_cpp()
@@ -360,4 +384,5 @@ if __name__ == '__main__':
     update_django()
     update_java()
     update_python()
+    update_js()
     app.run(debug=True)

@@ -1,28 +1,32 @@
 {% extends 'base.html' %}
 {% block css %}
 <style>
-    .card-category{
+    .card-category {
         font-weight: bold;
         font-family: Georgia, 'Times New Roman', Times, serif;
         text-shadow: 1px 1px #EC4D37;
     }
-    
-    #py_img{
+
+    #py_img {
         width: 5%;
     }
-    #cpp_img{
+
+    #cpp_img {
         width: 2%;
         margin-right: 1%
     }
-    #ai_img{
+
+    #ai_img {
         width: 3%;
         margin-right: 8px;
     }
-    #django_img{
+
+    #django_img {
         width: 4%;
-        margin-right: 1%  
+        margin-right: 1%
     }
-    #link_img{
+
+    #link_img {
         width: 7%;
         margin-left: 4px;
     }
@@ -34,20 +38,20 @@
 {% if selected=='p' %}
 <div class="container-fluid py-3">
     <div class="row">
-        <div class="col">
+        <div class="col-md-8 mx-auto">
             {% for news in details %}
             <div class="card my-3">
                 <div class="card-body">
-                    <img src="../static/images/wordpress-gab50779e4_640.png" alt="..." class="img-fluid" id="py_img">    
+                    <img src="../static/images/wordpress-gab50779e4_640.png" alt="..." class="img-fluid" id="py_img">
                     <h4 class="card-title d-inline">{{ news.topic }}</h4>
-                    <p class="card-text">{{news.description}}</p>
-                    <a target="blank" class="card-link" >Date: {{news.created_at.date()}}</a>   
+                    <p class="card-text">{{news.source}}</p>
+                    <a target="blank" class="card-link">Date: {{news.created_at.date()}}</a>
                 </div>
                 <div class="card-footer d-flex">
-                    <a target="blank" href="{{news.link}}" class="card-link" >Read Source</a>    
+                    <a target="blank" href="{{news.link}}" class="card-link">Read Source</a>
                     <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
-                </div>         
-            </div>         
+                </div>
+            </div>
             {% endfor %}
         </div>
     </div>
@@ -56,18 +60,18 @@
 
 <div class="container-fluid py-3">
     <div class="row">
-        <div class="col">
+        <div class="col-md-8 mx-auto">
             {% for news in details %}
             <div class="card my-3">
                 <div class="card-body">
                     {% if selected=='p' %}
                     <img src="../static/images/wordpress-gab50779e4_640.png" alt="..." class="img-fluid" id="py_img">
                     {% endif %}
-                    
+
                     {% if selected=='c' %}
                     <img src="../static/images/1822px-ISO_C++_Logo.svg.png" alt="..." class="img-fluid" id="cpp_img">
                     {% endif %}
-                    
+
                     {% if selected=='a' %}
                     <img src="../static/images/AI-removebg-preview.png" alt="..." class="img-fluid" id="ai_img">
                     {% endif %}
@@ -75,20 +79,23 @@
                     <img src="../static/images/django.png" alt="..." class="img-fluid" id="django_img">
                     {% endif %}
                     {% if selected=='j' %}
-                    <img src="../static/images/java.png" alt="..." class="img-fluid" id="java_img">
+                    <img src="../static/images/java.png" alt="..." class="img-fluid" id="java_img" width="50px"
+                        height="50px">
                     {% endif %}
-                    
-                    
+
+
                     <h4 class="card-title d-inline">{{ news.topic }}</h4>
-                    <div class="card-category"><h4>Category: {{news.category}}</h4></div>
+                    <div class="card-category">
+                        <h4>Category: {{news.source}}</h4>
+                    </div>
                     <p class="card-text">{{news.description}}</p>
-                    <a target="blank" class="card-link" >Date: {{news.created_at.date()}}</a>   
+                    <a target="blank" class="card-link">Date: {{news.created_at.date()}}</a>
                 </div>
                 <div class="card-footer d-flex">
-                    <a target="blank" href="{{news.link}}" class="card-link" >Read Source</a>  
-                    <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span> 
-                </div>         
-            </div>         
+                    <a target="blank" href="{{news.link}}" class="card-link">Read Source</a>
+                    <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
+                </div>
+            </div>
             {% endfor %}
         </div>
     </div>

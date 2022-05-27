@@ -2,53 +2,63 @@
 
 {% block css %}
 <style>
-  .card-category{
+  .card-category {
     font-weight: bold;
     font-family: Georgia, 'Times New Roman', Times, serif;
     text-shadow: 1px 1px #EC4D37;
   }
-  h2{
+
+  h2 {
     font-weight: bold;
     font-family: Georgia, 'Times New Roman', Times, serif;
     text-shadow: 1.5px 1.5px 2px #e6b6b6;
   }
-  .list-group-item{
+
+  .list-group-item {
     transition: width 2s;
   }
-  .list-group-item:hover{
+
+  .list-group-item:hover {
     font-weight: bold;
     background-color: #030E4F;
     width: 100%;
   }
-  .text{
+
+  .text {
     /* border: 2px solid red; */
     border-radius: 5px;
     color: #514644;
     text-decoration: none;
   }
-  .text:hover{
+
+  .text:hover {
     /* font-weight: bold; */
     color: #F49F1C;
     text-decoration: none !important;
-    
+
     /* background-color: rgb(3, 5, 2); */
-  } 
-  #py_img{
+  }
+
+  #py_img {
     width: 5%;
   }
-  #ai_img{
+
+  #ai_img {
     width: 3%;
     margin-right: 8px;
   }
-  #django_img{
+
+  #django_img {
     width: 4%;
-    margin-right: 1%  
+    margin-right: 1%
   }
-  #cpp_img{
+
+  #cpp_img {
     width: 2%;
     margin-right: 1%
   }
-  #link_img{
+
+  #link_img {
     width: 7%;
     margin-left: 4px;
   }
@@ -57,40 +67,44 @@
 {% block body %}
 {% include "notification.html" %}
 <div class="container-fluid py-3">
-  <div class="container-fluid">Wants to change your preferences?
-    <a href="/change" class="btn btn-outline-info" name="preference">Change Preference</a>
-  </div>
+
   <div class="row p-3">
     <div class="col-md-2">
       <ul class="list-group">
         {% if python_news %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          <a class="text"  href="/detail?f=p">Python News</a>
+          <a class="text" href="/detail?f=p">Python News</a>
           <!-- <span class="badge badge-secondary badge-pill">30</span> -->
         </li>
         {% endif %}
         {% if cpp_news %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          <a class="text"  href="/detail?f=c">CPlusPlus News</a>
+          <a class="text" href="/detail?f=c">CPlusPlus News</a>
           <!-- <span class="badge badge-secondary badge-pill">30</span> -->
         </li>
         {% endif %}
-        
+
         {% if ai_news %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <a class="text" href="/detail?f=a">AI news</a>
           <!-- <span class="badge badge-secondary badge-pill">30</span> -->
         </li>
         {% endif %}
-        {% if django_news %}        
+        {% if django_news %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          <a class="text"  href="/detail?f=d">Django News</a>
+          <a class="text" href="/detail?f=d">Django News</a>
           <!-- <span class="badge badge-secondary badge-pill">30</span> -->
         </li>
         {% endif %}
-        {% if java_news %}        
+        {% if java_news %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          <a class="text"  href="/detail?f=j">Java News</a>
+          <a class="text" href="/detail?f=j">Java News</a>
+          <!-- <span class="badge badge-secondary badge-pill">30</span> -->
+        </li>
+        {% endif %}
+        {% if js_news %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a class="text" href="/detail?f=js">Javascript News</a>
           <!-- <span class="badge badge-secondary badge-pill">30</span> -->
         </li>
         {% endif %}
@@ -98,7 +112,7 @@
     </div>
     <div class="col">
       <!-- Python News -->
-      {% if python_news %} 
+      {% if python_news %}
       <div class="container-fluid py-3">
         <div class="row">
           <div class="col">
@@ -111,13 +125,17 @@
                     <div class="card-body">
                       <img src="../static/images/wordpress-gab50779e4_640.png" alt="..." class="img-fluid" id="py_img">
                       <h4 class="card-title d-inline">{{ news|e }}</h4>
-                      <p class="card-text">{{news.description}}</p>
-                      <a target="blank"  class="card-link" >Date: {{news.created_at.date()}}</a>     
+                      <p class="card-text">{{news.source}}</p>
+                      {% if news.created_at %}
+                      <a target="blank" class="card-link">Date: {{news.created_at.date()}}</a>
+                      {% else %}
+                      <a target="blank" class="card-link">Date: N/A</a>
+                      {% endif %}
                     </div>
                     <div class="card-footer d-flex">
-                      <a target="blank" href="{{news.link}}" class="card-link" >Read Source</a>
-                      <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>    
-                      
+                      <a target="blank" href="{{news.link}}" class="card-link">Read Source</a>
+                      <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
+
                     </div>
                   </div>
                   {% endfor %}
@@ -128,29 +146,31 @@
         </div>
       </div>
       {% endif %}
-      
+
       <!-- CPP News -->
-      {% if cpp_news %} 
+      {% if cpp_news %}
       <div class="container-fluid py-3">
-        <div class="row">      
+        <div class="row">
           <div class="col">
             <div class="container">
               <h2>CPP News</h2>
               <div class="row">
                 <div class="col">
-                  {% for news in cpp_news %} 
+                  {% for news in cpp_news %}
                   <div class="card my-3">
                     <div class="card-body">
                       <img src="../static/images/1822px-ISO_C++_Logo.svg.png" alt="..." class="img-fluid" id="cpp_img">
                       <h4 class="card-title d-inline">{{ news.topic }}</h4>
-                      <div class="card-category"><h4>Category: {{news.category}}</h4></div>
+                      <div class="card-category">
+                        <h4>Category: {{news.category}}</h4>
+                      </div>
                       <p class="card-text">{{news.description}}</p>
-                      <a target="blank"  class="card-link" >Date: {{news.created_at.date()}}</a>     
+                      <a target="blank" class="card-link">Date: {{news.created_at.date()}}</a>
                     </div>
                     <div class="card-footer d-flex">
-                      <a target="blank" href="{{news.link}}" class="card-link" >Read Source</a>     
+                      <a target="blank" href="{{news.link}}" class="card-link">Read Source</a>
                       <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
-                      
+
                     </div>
                   </div>
                   {% endfor %}
@@ -162,9 +182,9 @@
       </div>
       {% endif %}
       <!-- AI News -->
-      {% if ai_news %} 
+      {% if ai_news %}
       <div class="container-fluid py-3">
-        <div class="row">      
+        <div class="row">
           <div class="col">
             <div class="container">
               <h2>AI News</h2>
@@ -175,13 +195,15 @@
                     <div class="card-body">
                       <img src="../static/images/AI-removebg-preview.png" alt="..." class="img-fluid" id="ai_img">
                       <h4 class="card-title d-inline">{{ news.topic }}</h4>
-                      <div class="card-category"><h4>Category: {{news.category}}</h4></div>
+                      <div class="card-category">
+                        <h4>Category: {{news.category}}</h4>
+                      </div>
                       <p class="card-text">{{news.description}}</p>
-                      <a target="blank"  class="card-link" >Date: {{news.created_at.date()}}</a>     
-                      
+                      <a target="blank" class="card-link">Date: {{news.created_at.date()}}</a>
+
                     </div>
                     <div class="card-footer d-flex">
-                      <a target="blank" href="{{news.link}}" class="card-link" >Read Source</a>     
+                      <a target="blank" href="{{news.link}}" class="card-link">Read Source</a>
                       <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
                     </div>
                   </div>
@@ -193,11 +215,9 @@
         </div>
       </div>
       {% endif %}
-      
-      <!-- Django News -->
-      {% if django_news %} 
+      {% if django_news %}
       <div class="container-fluid py-3">
-        <div class="row">      
+        <div class="row">
           <div class="col">
             <div class="container">
               <h2>Django News</h2>
@@ -208,13 +228,19 @@
                     <div class="card-body">
                       <img src="../static/images/django.png" alt="..." class="img-fluid" id="django_img">
                       <h4 class="card-title d-inline">{{ news.topic }}</h4>
-                      <div class="card-category"><h4>Category: {{news.category}}</h4></div>
+                      <div class="card-category">
+                        <h4>Category: {{news.category}}</h4>
+                      </div>
                       <p class="card-text">{{news.description}}</p>
-                      <a target="blank"  class="card-link" >Date: {{news.created_at.date()}}</a>     
-                      
+
+                      {% if news.created_at %}
+                      <a target="blank" class="card-link">Date: {{news.created_at.date()}}</a>
+                      {% else %}
+                      <a target="blank" class="card-link">Date: N/A</a>
+                      {% endif %}
                     </div>
                     <div class="card-footer d-flex">
-                      <a target="blank" href="{{news.link}}" class="card-link" >Read Source</a>     
+                      <a target="blank" href="{{news.link}}" class="card-link">Read Source</a>
                       <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
                     </div>
                   </div>
@@ -226,10 +252,105 @@
         </div>
       </div>
       {% endif %}
+      {% if java_news %}
+      <div class="container-fluid py-3">
+        <div class="row">
+          <div class="col">
+            <div class="container">
+              <h2>Java News</h2>
+              <div class="row">
+                <div class="col">
+                  {% for news in java_news %}
+                  <div class="card my-3">
+                    <div class="card-body">
+                      <img src="../static/images/java.png" alt="..." class="img-fluid" id="django_img">
+                      <h4 class="card-title d-inline">{{ news.topic }}</h4>
+                      <div class="card-category">
+                        <h5>Link: {{news.link}}</h5>
+                      </div>
+                      <p class="card-text">{{news.source}}</p>
+
+                      {% if news.created_at %}
+                      <a target="blank" class="card-link">Date: {{news.created_at.date()}}</a>
+                      {% else %}
+                      <a target="blank" class="card-link">Date: N/A</a>
+                      {% endif %}
+                    </div>
+                    <div class="card-footer d-flex">
+                      <a target="blank" href="{{news.link}}" class="card-link">Read Source</a>
+                      <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% if js_news %}
+      <div class="container-fluid py-3">
+        <div class="row">
+          <div class="col">
+            <div class="container">
+              <h2>JavaScript News</h2>
+              <div class="row">
+                <div class="col">
+                  {% for news in js_news %}
+                  <div class="card my-3">
+                    <div class="card-body">
+                      <img src="../static/images/js.png" alt="..." class="img-fluid" id="js_img" height="40px"
+                        width="40px">
+                      <h4 class="card-title d-inline">{{ news.topic }}</h4>
+                      <div class="card-category">
+                        <h4>Source: {{news.source}}</h4>
+                      </div>
+                      <p class="card-text">{{news.description}}</p>
+                      <a target="blank" class="card-link">Date: {{news.created_at.date()}}</a>
+                    </div>
+                    <div class="card-footer d-flex">
+                      <a target="blank" href="{{news.link}}" class="card-link">Read Source</a>
+                      <span><img src="../static/images/link.jpg" alt="..." class="img-fluid" id="link_img"></span>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      {% endif %}
     </div>
+
   </div>
 </div>
+<div class="container-fluid fixed-bottom p-4 badge-warning">Wants to change your preferences?
+  <a href="/change" class="btn btn-outline-info" name="preference">Change Preference</a>
 
+  {% if python_news %}
+  <a href="/detail?f=p" class="btn btn-success" name="preference">View Python Only</a>
+  {% endif %}
+  {% if cpp_news %}
+  <a href="/detail?f=c" class="btn btn-success" name="preference">View C++ Only</a>
+  {% endif %}
+  {% if ai_news %}
+  <a href="/detail?f=a" class="btn btn-success" name="preference">View A.I. News Only</a>
+  {% endif %}
+  {% if django_news %}
+  <a href="/detail?f=d" class="btn btn-success" name="preference">View Django Only</a>
+  {% endif %}
+  {% if java_news %}
+  <a href="/detail?f=j" class="btn btn-success" name="preference">View Java Only</a>
+  {% endif %}
+  {% if js_news %}
+  <a href="/detail?f=js" class="btn btn-success" name="preference">View JavaScript Only</a>
+  {% endif %}
+
+
+</div>
 
 
 

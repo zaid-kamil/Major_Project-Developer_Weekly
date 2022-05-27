@@ -110,6 +110,6 @@ if __name__ == '__main__':
     # creating dataframe of the extracted details
     df = pd.DataFrame(final_data)
     df['created_at'] = time_format
-    engine = create_engine('sqlite:///project_db.db')
-    df.to_sql(Cplusplus_News.__tablename__,engine,if_exists='append',index=None)
+    engine = create_engine('sqlite:///project.sqlite')
+    df.to_sql(Cplusplus_News.__tablename__,engine,if_exists='replace',index=None)
     print("Successfully Saved to database")
